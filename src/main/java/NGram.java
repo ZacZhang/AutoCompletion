@@ -1,18 +1,11 @@
-/**
- * Created by zhangzhichao on 2017-01-29.
- */
-import java.io.IOException;
-import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+import java.io.IOException;
 
 public class NGram {
 
@@ -38,11 +31,13 @@ public class NGram {
 
             String line = value.toString().trim().toLowerCase().replaceAll("[^a-z]", " ");//非字母的都会被替换成空格
             String[] words = line.split("\\s+");// "\\s"表示空格,回车,换行等空白符,"+"号表示一个或多个的意思
+
+            // 不需要考虑1-gram的情况
             if (words.length < 2) {
                 return;
             }
             StringBuilder sb;
-            for (int i = 1; i < words.length; i++) {
+            for (int i = 0; i < words.length; i++) {
                 sb = new StringBuilder();
                 sb.append(words[i]);
                 for (int j = 1; i + j < words.length && j < numOfGram; j++) {
